@@ -1,0 +1,20 @@
+@import "~antd/dist/antd.css";
+
+body {
+    width: 1400px;
+}
+
+.ant-menu-horizontal {
+    background: #60BFF2;
+}
+
+.ant-btn-primary {
+    background-color: #f09719;
+    border-color: #f09719;
+}
+
+.ant-select-selection--single {
+    color: #ffffff;
+    background-color: #f09719;
+    border-color: #f09719;
+}
