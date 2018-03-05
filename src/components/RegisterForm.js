@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, InputNumber, Radio, Checkbox, Button, } from 'antd';
+import {Form, Input, InputNumber, Radio, Checkbox, Button, notification, message} from 'antd';
 import axios from 'axios';
 
 const {Item} = Form;
@@ -16,23 +16,48 @@ class RegisterForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        let isSuccess = true;
+        message.config({
+            top: 200,
+            duration: 6,
+        });
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                let user = values;
-                console.log(user);
                 axios.post('http://localhost:8080/user/add', {
-                    user
+                    name: values.name,
+                    age: values.age,
+                    address: values.address,
+                    email: values.email,
+                    idcard: values.idcard,
+                    password: values.password,
+                    phoneNumber: values.phoneNumber,
+                    qq: values.qq,
+                    sex: values.sex
                 })
                     .then(function (response) {
-                        console.log(response);
+                        console.log(response.data.result);
+                        if (response.data.result === 'success') {
+                            notification.open({
+                                message: '注册成功通知',
+                                description: '恭喜您成为本系统注册用户'
+                            });
+                        } else {
+                            message.error("您未能注册成功，抱歉！")
+                            isSuccess = false;
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
+                        message.error("本系统出现故障，请联系系统管理员！")
+                        isSuccess = false;
                     });
             }
         });
-
+        console.log(isSuccess);
+        if(isSuccess) {
+            this.props.handleRegisterSuccess();
+        }
     };
 
     checkPassword = (rule, value, callback) => {
@@ -47,7 +72,7 @@ class RegisterForm extends React.Component {
     checkConfirm = (rule, value, callback) => {
         const form = this.props.form;
         if (value && this.state.confirmDirty) {
-            form.validateFields(['confirm'], { force: true });
+            form.validateFields(['confirm'], {force: true});
         }
         callback();
     };
@@ -102,7 +127,7 @@ class RegisterForm extends React.Component {
                         {
                             getFieldDecorator('sex', {
                                 rules: [{required: true, message: '性别是必选字段'}]
-                            })( <RadioGroup>
+                            })(<RadioGroup>
                                 <RadioButton value={1}>男</RadioButton>
                                 <RadioButton value={0}>女</RadioButton>
                             </RadioGroup>)
@@ -147,7 +172,7 @@ class RegisterForm extends React.Component {
                         {
                             getFieldDecorator('phoneNumber', {
                                 rules: [{required: true, message: '手机号是必填字段'}]
-                            })( <Input placeholder={'请输入您的手机号*'}/>)
+                            })(<Input placeholder={'请输入您的手机号*'}/>)
                         }
                     </Item>
                     <Item {...formItemLayout}
@@ -156,7 +181,7 @@ class RegisterForm extends React.Component {
                     >
                         {
                             getFieldDecorator('password', {
-                                rules: [{required: true, message: '密码是必填字段'},{validator: this.checkConfirm}]
+                                rules: [{required: true, message: '密码是必填字段'}, {validator: this.checkConfirm}]
                             })(<Input placeholder={'请输入您的密码*'} type={'password'}/>)
                         }
                     </Item>
@@ -166,7 +191,7 @@ class RegisterForm extends React.Component {
                     >
                         {
                             getFieldDecorator('confirm', {
-                                rules: [{required: true, message: '请再次输入密码'},{validator: this.checkPassword}]
+                                rules: [{required: true, message: '请再次输入密码'}, {validator: this.checkPassword}]
                             })(<Input placeholder={'请再次输入您的密码*'} type={'password'}/>)
                         }
                     </Item>
@@ -174,13 +199,20 @@ class RegisterForm extends React.Component {
                           label={'Q  Q'}
                           hasFeedback
                     >
-                        <Input maxLength={11} placeholder={'请输入您的QQ号(选填)'}/>
+                        {
+                            getFieldDecorator('qq')(<Input maxLength={11} placeholder={'请输入您的QQ号(选填)'}/>)
+                        }
+
                     </Item>
                     <Item {...formItemLayout}
                           label={'邮  箱'}
                           hasFeedback
                     >
-                        <Input placeholder={'请输入您的邮箱(选填)'}/>
+                        {
+                            getFieldDecorator('email', {
+                                rules: [{required: true, message: '请输入您的邮箱(方便找回密码)'}]
+                            })(<Input placeholder={'请输入您的邮箱(必填)'}/>)
+                        }
                     </Item>
                     <Item {...tailItemLayout}>
                         {

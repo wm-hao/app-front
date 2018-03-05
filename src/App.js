@@ -105,17 +105,19 @@ class App extends Component {
 
         if ('register' === contentComponentName) {
             WrappedForm = Form.create()(RegisterForm);
-            ContentComponent = <WrappedForm/>;
+            ContentComponent = <WrappedForm handleRegisterSuccess={this.handleRegisterSuccess}/>;
             MenuComponment = this.renderRegisterMenu();
         } else if('login' === contentComponentName) {
             WrappedForm = Form.create()(LoginForm);
-            ContentComponent = <WrappedForm handleRegister={this.handleRegister}/>;
+            ContentComponent = <WrappedForm handleForgetPassword={this.handleForgetPassword}/>;
             MenuComponment = this.renderLoginMenu();
         } else  if('personal' === contentComponentName) {
             ContentComponent = <h1>个人中心</h1>;
             MenuComponment = this.renderPersonalMenu();
-        }
-        else {
+        } else if('registerSuccess' === contentComponentName) {
+            ContentComponent = <h1>注册成功</h1>;
+            MenuComponment = this.renderRegisterMenu();
+        } else {
             ContentComponent = <h1>home</h1>;
             MenuComponment = this.renderIndexMenu();
         }
@@ -195,6 +197,14 @@ class App extends Component {
         this.setState({
             contentComponent: clickParams.key,
             currentMenu: clickParams.key
+        })
+    };
+
+    handleRegisterSuccess = () => {
+        console.log('invoke handleRegisterSuccess');
+        this.setState({
+            contentComponent: 'registerSuccess',
+            currentMenu: 'register'
         })
     }
 
