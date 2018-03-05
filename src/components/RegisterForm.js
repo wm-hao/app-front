@@ -1,6 +1,7 @@
 import React from 'react';
 import {Form, Input, InputNumber, Radio, Checkbox, Button, notification, message} from 'antd';
 import axios from 'axios';
+import {ServerUrl,UserAdd} from "./Constants";
 
 const {Item} = Form;
 const RadioGroup = Radio.Group;
@@ -19,17 +20,17 @@ class RegisterForm extends React.Component {
         let isSuccess = true;
         message.config({
             top: 200,
-            duration: 6,
+            duration: 4,
         });
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                axios.post('http://localhost:8080/user/add', {
+                axios.post(ServerUrl + UserAdd, {
                     name: values.name,
                     age: values.age,
                     address: values.address,
                     email: values.email,
-                    idcard: values.idcard,
+                    idcard: values.idCard,
                     password: values.password,
                     phoneNumber: values.phoneNumber,
                     qq: values.qq,
@@ -40,22 +41,26 @@ class RegisterForm extends React.Component {
                         if (response.data.result === 'success') {
                             notification.open({
                                 message: '注册成功通知',
-                                description: '恭喜您成为本系统注册用户'
+                                description: '恭喜您成为本系统注册用户！'
+                            });
+                            notification.open({
+                                message: '温馨提示',
+                                description: '您可以登录了，请点击网站右上方的登录进行登录！'
                             });
                         } else {
-                            message.error("您未能注册成功，抱歉！")
+                            message.error("您未能注册成功，抱歉！");
                             isSuccess = false;
                         }
                     })
                     .catch(function (error) {
                         console.log(error);
-                        message.error("本系统出现故障，请联系系统管理员！")
+                        message.error("本系统出现故障，请联系系统管理员！");
                         isSuccess = false;
                     });
             }
         });
         console.log(isSuccess);
-        if(isSuccess) {
+        if (isSuccess) {
             this.props.handleRegisterSuccess();
         }
     };
