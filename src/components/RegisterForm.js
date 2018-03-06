@@ -17,7 +17,7 @@ class RegisterForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        let isSuccess = true;
+        const props = this.props;
         message.config({
             top: 200,
             duration: 4,
@@ -47,22 +47,17 @@ class RegisterForm extends React.Component {
                                 message: '温馨提示',
                                 description: '您可以登录了，请点击网站右上方的登录进行登录！'
                             });
+                            props.handleRegisterSuccess();
                         } else {
                             message.error("您未能注册成功，抱歉！");
-                            isSuccess = false;
                         }
                     })
                     .catch(function (error) {
                         console.log(error);
                         message.error("本系统出现故障，请联系系统管理员！");
-                        isSuccess = false;
                     });
             }
         });
-        console.log(isSuccess);
-        if (isSuccess) {
-            this.props.handleRegisterSuccess();
-        }
     };
 
     checkPassword = (rule, value, callback) => {

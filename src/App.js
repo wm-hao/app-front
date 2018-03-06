@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {Icon, Row, Col, Input, Select, Menu, Form} from 'antd';
+import {Col, Form, Icon, Input, Menu, Row, Select} from 'antd';
 import './App.css';
 import Logo from './assets/img/logo.jpg';
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
+import ForgotPasswordForm from "./components/ForgotPasswordForm";
+
 
 class App extends Component {
     constructor(props) {
@@ -97,6 +99,26 @@ class App extends Component {
         )
     };
 
+    renderForgotMenu = () => {
+        return (
+            <div>
+                <Menu onClick={this.handleMenuClick}
+                      selectedKeys={[this.state.currentMenu]}
+                      mode="horizontal">
+                    <Menu.Item key="hospital">
+                        按医院挂号
+                    </Menu.Item>
+                    <Menu.Item key="department">
+                        按科室挂号
+                    </Menu.Item>
+                    <Menu.Item key="forgot">
+                        找回密码
+                    </Menu.Item>
+                </Menu>
+            </div>
+        )
+    };
+
     renderTopRow = () => {
         return (
             <Row>
@@ -123,8 +145,10 @@ class App extends Component {
                 </Col>
                 <Col span={6}>
                     <div style={{textAlign: 'right'}}>
-                        欢迎您,{this.state.userInfo.name}&nbsp;&nbsp;<a href={'#/login'} onClick={this.handleLogin}>个人中心</a>或<a href={'#/register'}
-                                                                                               onClick={this.handleRegister}>退出</a>
+                        欢迎您,{this.state.userInfo.name}&nbsp;&nbsp;<a href={'#/login'}
+                                                                     onClick={this.enterPersonalCenter}>个人中心</a>或<a
+                        href={'#/register'}
+                        onClick={this.handleLogout}>退出</a>
                     </div>
                 </Col>
             </Row>
@@ -152,6 +176,10 @@ class App extends Component {
         } else if ('personal' === contentComponentName) {
             ContentComponent = <h1>个人中心</h1>;
             MenuComponent = this.renderPersonalMenu();
+        } else if ('forgot' === contentComponentName) {
+            WrappedForm = Form.create()(ForgotPasswordForm);
+            ContentComponent = <WrappedForm handleForgotSuccess={this.handleForgotSuccess}/>;
+            MenuComponent = this.renderForgotMenu();
         } else {
             ContentComponent = <h1>home</h1>;
             MenuComponent = this.renderIndexMenu();
@@ -159,7 +187,7 @@ class App extends Component {
 
         if (isLogin) {
             TopRowComponent = this.renderTopRowLogin();
-        }else {
+        } else {
             TopRowComponent = this.renderTopRow();
         }
 
@@ -245,7 +273,38 @@ class App extends Component {
         this.setState({
             contentComponent: 'hospital',
             currentMenu: 'hospital',
-            userInfo: userInfo
+            userInfo: userInfo,
+            isLogin: true
+        })
+    };
+
+    handleForgetPassword = () => {
+        console.log('invoke handleForgetPassword');
+        this.setState({
+            contentComponent: 'forgot',
+            currentMenu: 'forgot'
+        })
+    };
+
+    handleForgotSuccess = () => {
+        console.log('invoke handleForgotSuccess');
+        this.handleLogin();
+    };
+
+    handleLogout = () => {
+        console.log('invoke handleLogout');
+        this.setState({
+            contentComponent: 'hospital',
+            currentMenu: 'hospital',
+            isLogin: false
+        })
+    };
+
+    enterPersonalCenter = () => {
+        console.log('invoke enterPersonalCenter');
+        this.setState({
+            contentComponent: 'personal',
+            currentMenu: 'personal'
         })
     }
 

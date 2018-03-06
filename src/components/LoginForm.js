@@ -7,9 +7,6 @@ import {message, notification} from "antd/lib/index";
 const FormItem = Form.Item;
 
 class LoginForm extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const formItemLayout = {
@@ -64,7 +61,7 @@ class LoginForm extends React.Component {
                     )}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a className="login-form-forgot" href="/#/forgotPassword"
-                       onClick={this.handleForgetPassword}>忘记密码?</a>
+                       onClick={this.props.handleForgetPassword}>忘记密码?</a>
                 </FormItem>
                 <FormItem {...submitItemLayout}>
                     <Button type="primary" htmlType="submit">
@@ -77,6 +74,7 @@ class LoginForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        const props = this.props;
         let userInfo = {};
         message.config({
             top: 200,
@@ -94,13 +92,17 @@ class LoginForm extends React.Component {
                             phoneNumber: values.username
                         }).then(function (response) {
                             userInfo = response.data;
+                            notification.open({
+                                message: '登录成功通知',
+                                description: '在线预约挂号系统欢迎您！'
+                            });
+                            props.handleLoginSuccess(userInfo);
                         }).catch(function (error) {
                             console.log(error);
                             message.error("登录遇到问题，登录失败！");
                         })
                     } else {
                         message.error("用户名或密码不正确，请重新登录！");
-                        return {};
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -108,20 +110,8 @@ class LoginForm extends React.Component {
                 })
             }
         });
-        this.handleLoginSuccess(userInfo);
     };
 
-    handleForgetPassword = () => {
-        console.log('处理忘记密码')
-    };
-
-    handleLoginSuccess = (userInfo) => {
-        notification.open({
-            message: '登录成功通知',
-            description: '在线预约挂号系统欢迎您！'
-        });
-        this.props.handleLoginSuccess(userInfo);
-    }
 }
 
 export default LoginForm;
