@@ -11,7 +11,8 @@ class App extends Component {
         this.state = {
             contentComponent: 'hospital',
             currentMenu: 'hospital',
-            userInfo: {}
+            userInfo: {},
+            isLogin: false
         }
     }
 
@@ -20,7 +21,7 @@ class App extends Component {
     }
 
     renderIndexMenu = () => {
-        return(
+        return (
             <div>
                 <Menu onClick={this.handleMenuClick}
                       selectedKeys={[this.state.currentMenu]}
@@ -96,43 +97,75 @@ class App extends Component {
         )
     };
 
+    renderTopRow = () => {
+        return (
+            <Row>
+                <Col span={18}>
+                    <Icon type="phone" style={{fontSize: 20}}/>
+                    &nbsp;010-114/116114电话预约
+                </Col>
+                <Col span={6}>
+                    <div style={{textAlign: 'right'}}>
+                        欢迎来到在线预约挂号平台,请<a href={'#/login'} onClick={this.handleLogin}>登录</a>或<a href={'#/register'}
+                                                                                               onClick={this.handleRegister}>注册</a>
+                    </div>
+                </Col>
+            </Row>
+        )
+    };
+
+    renderTopRowLogin = () => {
+        return (
+            <Row>
+                <Col span={18}>
+                    <Icon type="phone" style={{fontSize: 20}}/>
+                    &nbsp;010-114/116114电话预约
+                </Col>
+                <Col span={6}>
+                    <div style={{textAlign: 'right'}}>
+                        欢迎您,{this.state.userInfo.name}&nbsp;&nbsp;<a href={'#/login'} onClick={this.handleLogin}>个人中心</a>或<a href={'#/register'}
+                                                                                               onClick={this.handleRegister}>退出</a>
+                    </div>
+                </Col>
+            </Row>
+        )
+    };
 
     render() {
+        let TopRowComponent;
         let ContentComponent;
-        let MenuComponment;
+        let MenuComponent;
         let WrappedForm;
-        const contentComponentName = this.state.contentComponent;
 
+        const contentComponentName = this.state.contentComponent;
+        const isLogin = this.state.isLogin;
 
         if ('register' === contentComponentName) {
             WrappedForm = Form.create()(RegisterForm);
             ContentComponent = <WrappedForm handleRegisterSuccess={this.handleRegisterSuccess}/>;
-            MenuComponment = this.renderRegisterMenu();
-        } else if('login' === contentComponentName) {
+            MenuComponent = this.renderRegisterMenu();
+        } else if ('login' === contentComponentName) {
             WrappedForm = Form.create()(LoginForm);
-            ContentComponent = <WrappedForm handleForgetPassword={this.handleForgetPassword} handleLoginSuccess={this.handleLoginSuccess}/>;
-            MenuComponment = this.renderLoginMenu();
-        } else  if('personal' === contentComponentName) {
+            ContentComponent = <WrappedForm handleForgetPassword={this.handleForgetPassword}
+                                            handleLoginSuccess={this.handleLoginSuccess}/>;
+            MenuComponent = this.renderLoginMenu();
+        } else if ('personal' === contentComponentName) {
             ContentComponent = <h1>个人中心</h1>;
-            MenuComponment = this.renderPersonalMenu();
-        }  else {
+            MenuComponent = this.renderPersonalMenu();
+        } else {
             ContentComponent = <h1>home</h1>;
-            MenuComponment = this.renderIndexMenu();
+            MenuComponent = this.renderIndexMenu();
         }
+
+        if (isLogin) {
+            TopRowComponent = this.renderTopRowLogin();
+        }else {
+            TopRowComponent = this.renderTopRow();
+        }
+
         return (
             <div style={{margin: '0 10%'}}>
-                <Row>
-                    <Col span={18}>
-                        <Icon type="phone" style={{fontSize: 20}}/>
-                        &nbsp;010-114/116114电话预约
-                    </Col>
-                    <Col span={6}>
-                        <div style={{textAlign: 'right'}}>
-                            欢迎来到在线预约挂号平台,请<a href={'#/login'} onClick={this.handleLogin}>登录</a>或<a href={'#/register'}
-                                                                                                   onClick={this.handleRegister}>注册</a>
-                        </div>
-                    </Col>
-                </Row>
+                {TopRowComponent}
                 <Row>
                     <Col span={16}>
                         <div style={{marginTop: '2%'}}>
@@ -158,7 +191,7 @@ class App extends Component {
                 <Row>
                     <Col span={24}>
                         <div style={{margin: '2% 0'}}>
-                            {MenuComponment}
+                            {MenuComponent}
                         </div>
                     </Col>
                 </Row>
