@@ -175,7 +175,7 @@ class App extends Component {
                                             handleLoginSuccess={this.handleLoginSuccess}/>;
             MenuComponent = this.renderLoginMenu();
         } else if ('personal' === contentComponentName) {
-            ContentComponent = <PersonalCenter/>;
+            ContentComponent = <PersonalCenter userInfo={this.state.userInfo}/>;
             MenuComponent = this.renderPersonalMenu();
         } else if ('forgot' === contentComponentName) {
             WrappedForm = Form.create()(ForgotPasswordForm);
@@ -297,7 +297,8 @@ class App extends Component {
         this.setState({
             contentComponent: 'hospital',
             currentMenu: 'hospital',
-            isLogin: false
+            isLogin: false,
+            userInfo: {}
         })
     };
 

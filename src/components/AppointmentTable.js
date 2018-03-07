@@ -1,58 +1,75 @@
 import React from 'react';
+import axios from 'axios';
+import {ServerUrl, RecordQryByPhoneNumber} from "./Constants";
 
 import {Table} from 'antd';
 
-const dataSource = [{
-    key: '1',
-    time: '2018-02-28',
-    hospital: '杭州第一医院',
-    department: '儿科',
-    doctor: '李垚',
-    user: '李垚他媳妇',
-    state: '已完成'
-}, {
-    key: '1',
-    time: '2018-03-06',
-    hospital: '杭州第一医院',
-    department: '妇科',
-    doctor: '李垚',
-    user: '李垚他媳妇',
-    state: '未完成'
-}];
+const locale = {
+    filterTitle: '筛选',
+    filterConfirm: '确定',
+    filterReset: '重置',
+    emptyText: '暂无预约记录',
+};
 
 const columns = [{
     title: '就诊时间',
-    dataIndex: 'time',
-    key: 'time',
+    dataIndex: 'appointmentTime',
+    key: 'appointmentTime',
 }, {
     title: '医院',
-    dataIndex: 'hospital',
-    key: 'hospital',
+    dataIndex: 'hospitalName',
+    key: 'hospitalName',
 }, {
     title: '科室',
-    dataIndex: 'department',
-    key: 'department',
-},{
+    dataIndex: 'departmentName',
+    key: 'departmentName',
+}, {
     title: '医生',
-    dataIndex: 'doctor',
-    key: 'doctor',
-},{
+    dataIndex: 'doctorName',
+    key: 'doctorName',
+}, {
     title: '挂号人',
-    dataIndex: 'user',
-    key: 'user',
-},{
+    dataIndex: 'userName',
+    key: 'userName',
+}, {
     title: '状态',
     dataIndex: 'state',
     key: 'state',
 }];
 
 class AppointmentTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            records: []
+        }
+    }
+
     render() {
         return (
             <div>
-                <Table dataSource={dataSource} columns={columns}/>
+                <Table dataSource={this.state.records} columns={columns} pagination={{ pageSize: 5 }} locale={locale}/>
             </div>
         )
+    }
+
+    componentDidMount() {
+        const self = this;
+        const props = this.props;
+        axios.post(ServerUrl + RecordQryByPhoneNumber, {
+            phoneNumber: props.userInfo.phoneNumber
+        }).then(function (response) {
+            console.log(response.data);
+            self.saveRecords(response.data);
+        }).catch(function (error) {
+            console.error(error);
+        })
+    }
+
+    saveRecords = (data) => {
+        this.setState({
+            records: data
+        })
     }
 }
 
