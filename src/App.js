@@ -5,6 +5,7 @@ import Logo from './assets/img/logo.jpg';
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import ForgotPasswordForm from "./components/ForgotPasswordForm";
+import PersonalCenter from "./components/PersonalCenter";
 
 
 class App extends Component {
@@ -174,7 +175,7 @@ class App extends Component {
                                             handleLoginSuccess={this.handleLoginSuccess}/>;
             MenuComponent = this.renderLoginMenu();
         } else if ('personal' === contentComponentName) {
-            ContentComponent = <h1>个人中心</h1>;
+            ContentComponent = <PersonalCenter/>;
             MenuComponent = this.renderPersonalMenu();
         } else if ('forgot' === contentComponentName) {
             WrappedForm = Form.create()(ForgotPasswordForm);
