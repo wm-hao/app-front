@@ -9,7 +9,7 @@ class UserInfoTabs extends React.Component {
         return(
             <div>
                 <Tabs tabPosition={'top'}>
-                    <TabPane tab="个人信息" key="1"><UserInfoForm/></TabPane>
+                    <TabPane tab="个人信息" key="1"><UserInfoForm userInfo={this.props.userInfo}/></TabPane>
                     <TabPane tab="修改密码" key="2">密码修改</TabPane>
                 </Tabs>
             </div>

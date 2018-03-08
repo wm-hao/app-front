@@ -6,5 +6,6 @@ export const UserLogin = 'user/selectByPhoneNumber';
 export const UserSendValidateCode = 'user/getValidateCode';
 export const UserResolveForgot = 'user/resolveForgotPassword';
 export const RecordQryByPhoneNumber = 'record/selectByUserCode';
+export const GetUserInfoInList = 'user/getUserInfoInList';
 
 

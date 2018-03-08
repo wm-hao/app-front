@@ -12,7 +12,7 @@ class PersonalCenter extends React.Component {
             <div>
                 <Tabs tabPosition={'left'}>
                     <TabPane tab="我的预约" key="1"><AppointmentTable userInfo={this.props.userInfo}/></TabPane>
-                    <TabPane tab="信息管理" key="2"><UserInfoTabs/></TabPane>
+                    <TabPane tab="信息管理" key="2"><UserInfoTabs userInfo={this.props.userInfo}/></TabPane>
                     <TabPane tab="意见反馈" key="3">意见反馈</TabPane>
                 </Tabs>
             </div>
