@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Icon, Input, Checkbox, Button} from 'antd';
 import axios from 'axios';
-import {ServerUrl, UserLogin, UserValidate} from './Constants';
+import {fail, ServerUrl, UserLogin, UserValidate} from './Constants';
 import {message, notification} from "antd/lib/index";
 
 const FormItem = Form.Item;
@@ -78,7 +78,7 @@ class LoginForm extends React.Component {
         let userInfo = {};
         message.config({
             top: 200,
-            duration: 4,
+            duration: 3,
         });
         this.props.form.validateFields((err, values) => {
             if (!err) {
@@ -92,21 +92,21 @@ class LoginForm extends React.Component {
                             phoneNumber: values.username
                         }).then(function (response) {
                             userInfo = response.data;
-                            notification.open({
+                            notification['success']({
                                 message: '登录成功通知',
                                 description: '在线预约挂号系统欢迎您！'
                             });
                             props.handleLoginSuccess(userInfo);
                         }).catch(function (error) {
                             console.log(error);
-                            message.error("登录遇到问题，登录失败！");
+                           fail('通知面板',"登录遇到问题，登录失败！");
                         })
                     } else {
-                        message.error("用户名或密码不正确，请重新登录！");
+                        fail('通知面板',"用户名或密码不正确，请重新登录！");
                     }
                 }).catch(function (error) {
                     console.log(error);
-                    message.error("登录遇到问题，登录失败！");
+                    fail('通知面板',"登录遇到问题，登录失败！");
                 })
             }
         });

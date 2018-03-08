@@ -1,32 +1,30 @@
 import React from 'react';
-import {List, Input} from 'antd';
+import {List} from 'antd';
 import axios from 'axios';
 import {GetUserInfoInList, ServerUrl} from "./Constants";
+import UserInfoUpdate from "./UserInfoUpdate";
+import '../App.css';
 
 class UserInfoForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            dataSource : []
+            dataSource: []
         }
     }
 
     render() {
         return (
             <List
-                // className="demo-loadmore-list"
-                // loading={loading}
-                // itemLayout="horizontal"
-                // loadMore={loadMore}
                 dataSource={this.state.dataSource}
+                grid={{column: 2}}
                 renderItem={item => (
-                    <List.Item actions={[<a>修改</a>, <a>提交</a>]}>
+                    <List.Item actions={[<UserInfoUpdate name={item.name} value={item.content}/>]}>
                         <List.Item.Meta
                             title={item.name}
                         />
                         <div>{item.content}</div>
-                        <Input />
                     </List.Item>
                 )}
             />

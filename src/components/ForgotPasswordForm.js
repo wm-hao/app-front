@@ -2,7 +2,7 @@ import React from 'react';
 import {Form, Input, Button, Icon, Row, Col} from 'antd';
 import axios from 'axios';
 import {message, notification} from "antd/lib/index";
-import {ServerUrl, UserSendValidateCode, UserResolveForgot} from "./Constants";
+import {ServerUrl, UserSendValidateCode, UserResolveForgot, success, fail, warning} from "./Constants";
 
 const FormItem = Form.Item;
 
@@ -102,6 +102,14 @@ class ForgotPasswordForm extends React.Component {
         const {getFieldValue} = this.props.form;
         let phone = getFieldValue('username');
         let email = getFieldValue('email');
+        if(!phone) {
+            warning('警告', '您未填写手机号码！');
+            return
+        }
+        if(!email) {
+            warning('警告', '您未填写注册邮箱！');
+            return
+        }
         const self = this;
         console.log(phone + '--' + email);
         axios.post(ServerUrl + UserSendValidateCode, {
@@ -112,14 +120,16 @@ class ForgotPasswordForm extends React.Component {
         }).then(function (response) {
             console.log(response.data);
             if(response.data.result === 'success') {
-               self.saveValidateCode(response.data.data);
-               message.success("发送验证码成功，去注意您的邮箱提醒！")
+                self.saveValidateCode(response.data.data);
+                // message.success("发送验证码成功，去注意您的邮箱提醒！")
+                success('通知面板', '发送验证码成功，请注意您的邮箱提醒！')
             }else{
-                message.error("发送验证码遇到问题，请联系系统管理员！");
+                // message.error("发送验证码遇到问题，请联系系统管理员！");
+                fail('通知面板', '发送验证码遇到问题，请联系系统管理员！');
             }
         }).catch(function (error) {
             console.log(error);
-            message.error("发送验证码遇到问题，请联系系统管理员！");
+            fail('通知面板', "发送验证码遇到问题，请联系系统管理员！");
         })
     };
 
@@ -140,17 +150,17 @@ class ForgotPasswordForm extends React.Component {
                     validateCode: values.validateCode
                 }).then(function (response) {
                     if (response.data.result === 'success') {
-                            notification.open({
+                            notification['success']({
                                 message: '找回密码通知',
                                 description: '您已成功找回密码,现在可以使用新密码登录了！'
                             });
                             props.handleForgotSuccess();
                     } else {
-                        message.error("您输入的验证码可能不正确，找回密码失败！");
+                       fail('通知面板', "您输入的验证码可能不正确，找回密码失败！");
                     }
                 }).catch(function (error) {
                     console.log(error);
-                    message.error("找回密码遇到问题，请联系系统管理员！");
+                    fail("找回密码遇到问题，请联系系统管理员！");
                 })
             }
         });

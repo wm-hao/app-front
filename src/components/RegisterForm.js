@@ -39,11 +39,11 @@ class RegisterForm extends React.Component {
                     .then(function (response) {
                         console.log(response.data.result);
                         if (response.data.result === 'success') {
-                            notification.open({
+                           notification['success']({
                                 message: '注册成功通知',
                                 description: '恭喜您成为本系统注册用户！'
                             });
-                            notification.open({
+                            notification['success']({
                                 message: '温馨提示',
                                 description: '您可以登录了，请点击网站右上方的登录进行登录！'
                             });
