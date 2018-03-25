@@ -1,20 +1,20 @@
 import React from 'react';
-import {Tabs} from 'antd';
-import AppointmentTable from "./AppointmentTable";
-import UserInfoTabs from "./UserInfoTabs";
+import UserCenter from "./UserCenter";
+import DoctorCenter from "./DoctorCenter";
+import AdminCenter from "./AdminCenter";
 
-const TabPane = Tabs.TabPane;
 
 class PersonalCenter extends React.Component {
 
     render() {
         return (
             <div>
-                <Tabs tabPosition={'left'}>
-                    <TabPane tab="我的预约" key="1"><AppointmentTable userInfo={this.props.userInfo}/></TabPane>
-                    <TabPane tab="信息管理" key="2"><UserInfoTabs userInfo={this.props.userInfo}/></TabPane>
-                    <TabPane tab="意见反馈" key="3">意见反馈</TabPane>
-                </Tabs>
+                {this.props.userType === 'user'
+                    ? <UserCenter userInfo={this.props.userInfo} userType={this.props.userType}/>
+                    : (this.props.userType === 'doctor' ?
+                        <DoctorCenter userInfo={this.props.userInfo} userType={this.props.userType}/> : this.props.userType === 'admin' ?
+                            <AdminCenter userInfo={this.props.userInfo} userType={this.props.userType}/> : '未知错误')
+                }
             </div>
         )
     }

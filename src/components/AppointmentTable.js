@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {ServerUrl, RecordQryByPhoneNumber} from "./Constants";
+import {ServerUrl, RecordQryByUserCode, RecordQryByDoctorCode} from "./Constants";
 
 import {Table} from 'antd';
 
@@ -56,14 +56,28 @@ class AppointmentTable extends React.Component {
     componentDidMount() {
         const self = this;
         const props = this.props;
-        axios.post(ServerUrl + RecordQryByPhoneNumber, {
-            phoneNumber: props.userInfo.phoneNumber
-        }).then(function (response) {
-            console.log(response.data);
-            self.saveRecords(response.data);
-        }).catch(function (error) {
-            console.error(error);
-        })
+        console.log(props);
+        if(props.userType === 'user') {
+            axios.post(ServerUrl + RecordQryByUserCode, {
+                userCode: props.userInfo.userCode
+            }).then(function (response) {
+                console.log(response.data);
+                self.saveRecords(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            })
+        }
+        if(props.userType === 'doctor') {
+            axios.post(ServerUrl + RecordQryByDoctorCode, {
+                doctorCode: props.userInfo.doctorCode
+            }).then(function (response) {
+                console.log(response.data);
+                self.saveRecords(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            })
+        }
+
     }
 
     saveRecords = (data) => {
